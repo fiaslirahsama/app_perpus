@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Update Buku {{getbuku['judul']}}{% endblock %}</h1>
+  <a class="action button-menu" href="{{ url_for('perpus.tambahbuku') }}">kembali ke list buku</a>
+{% endblock %}
+
+{% block content %}
+  <form method="POST">
+    <table>
+      <tr>
+        <td><label for="isbn">Kode ISBN :</label></td>
+        <td><input name="isbn" id="isbn" value="{{ request.form['isbn'] or getbuku['isbn'] }}" required readonly></td>
+      </tr>
+      <tr>
+        <td><label for="judul">Judul :</label></td>
+        <td><input name="judul" id="judul" value="{{ request.form['judul'] or getbuku['judul'] }}" required readonly></td>
+      </tr>
+      <tr>
+        <td><label for="genre">Genre :</label></td>
+        <td><input name="genre" id="genre" value="{{ request.form['genre'] or getbuku['genre'] }}" required readonly></td>
+      </tr>
+      <tr>
+        <td><label for="sinopsis">Sinopsis :</label></td>
+        <td><input name="sinopsis" id="sinopsis" value="{{ request.form['sinopsis'] or getbuku['sinopsis'] }}" required></td>
+      </tr>
+      <tr>
+        <input name="status" id="status" value="dipinjam" type="hidden">
+      </tr>
+      <tr>
+        <input name="flag" id="flag" value="updated" type="hidden">
+      </tr>
+      <tr>
+        <td><button class="button-input" type="submit">Update buku</button></td>
+      </tr>
+    </table>
+  </form>
+{% endblock %}

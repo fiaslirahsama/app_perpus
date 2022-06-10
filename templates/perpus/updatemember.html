@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Update Member {{getmember['nama']}}{% endblock %}</h1>
+  <a class="action button-menu" href="{{ url_for('perpus.tambahmember') }}">kembali ke list member</a>
+{% endblock %}
+
+{% block content %}
+  <form method="POST">
+    <table>
+      <tr>
+        <td><label for="idmember">ID member :</label></td>
+        <td><input name="idmember" id="idmember" value="{{ request.form['idmember'] or getmember['idmember'] }}" required></td>
+      </tr>
+      <tr>
+        <td><label for="nik">NIK :</label></td>
+        <td><input name="nik" id="nik" value="{{ request.form['nik'] or getmember['nik'] }}" required></td>
+      </tr>
+      <tr>
+        <td><label for="nama">Nama :</label></td>
+        <td><input name="nama" id="nama" value="{{ request.form['nama'] or getmember['nama'] }}" required></td>
+      </tr>
+      <tr>
+        <td><label for="jenis_kelamin">Jenis Kelamin :</label></td>
+        <td><input name="jenis_kelamin" id="jenis_kelamin" value="{{ request.form['jenis_kelamin'] or getmember['jenis_kelamin'] }}" readonly></td>
+      </tr>
+      <tr>
+        <td><label for="alamat">Alamat :</label></td>
+        <td><input name="alamat" id="alamat'" value="{{ request.form['alamat'] or getmember['alamat'] }}" required></td>
+      </tr>
+      <tr>
+        <input name="flag" id="flag" value="updated" type="hidden">
+      </tr>
+      <tr>
+        <td><button class="button-input" type="submit">Update Member</button></td>
+      </tr>
+    </table>
+  </form>
+  <hr>
+  <form action="{{ url_for('perpus.deletemember', id=getmember['id']) }}" method="post">
+    <input class="button-delete" type="submit" value="Delete" onclick="return confirm('Hapus Data member {{getmember['nama']}}?');">
+  </form>
+{% endblock %}

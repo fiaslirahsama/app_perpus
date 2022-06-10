@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Transaksi{% endblock %}</h1>
+  {% if g.admin %}
+    <a class="action button-menu" href="{{ url_for('perpus.tambahbuku') }}">Database Buku</a>
+    <a class="action button-menu" href="{{ url_for('perpus.tambahmember') }}">Database Member</a>
+    <a class="action button-menu" href="{{ url_for('perpus.tambahtransaksi') }}">Tambah Transaksi</a>
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+<form method="POST">
+  <table style="border: 2px solid blue; padding:20px;">
+    <tr>
+      <td><label for="caripeminjam">Cari berdasarkan nama peminjam</label></td>
+      <td><h2>:</h2></td>
+      <td colspan ="3"><input style="width:100%" name="caripeminjam" value="" id="caripeminjam"></td>
+    </tr>
+    <tr>
+      <td><label for="carijudul">Cari berdasarkan judul buku</label></td>
+      <td><h2>:</h2></td>
+      <td colspan ="3"><input style="width:100%" name="carijudul" value="" id="carijudul"></td>
+    </tr>
+    <tr>
+      <td rowspan="2"><label for="cariisbn">Cari berdasarkan Waktu</label></td>
+      <td rowspan="2"><h2>:</h2></td>
+      <td align="center"><label>Setelah</label></td>
+      <td align="center"><label>Sebelum</label></td>
+    </tr>
+    <tr>
+      <td><input style="width:100%; height: 40px; font-size:24px;" type="date" name="cariwaktu1" value="" id="cariwaktu1"></td>
+      <td><input style="width:100%; height: 40px; font-size:24px;" type="date" name="cariwaktu2" value="" id="cariwaktu2"></td>
+    </tr>
+    <tr>
+      <td colspan="4" align="center"><button class="button-cari" name="caridatatransaksi" type="submit"><b>Tampilkan Data</b></button></td>
+    </tr>
+  </table>
+</form>
+{% if g.admin %}
+<form action="{{ url_for('perpus.downloadtransaksi') }}" method="POST" >
+  <input name="cp" id="cp" value="{{cp}}" type="hidden">
+  <input name="cj" id="cj" value="{{cj}}" type="hidden">
+  <input name="cw1" id="cw1" value="{{cw1}}" type="hidden">
+  <input name="cw2" id="cw2" value="{{cw2}}" type="hidden">
+  <button class="button-input" name="downloaddatatransaksi" type="submit"><b>Download</b></button>
+</form>
+{% endif %}
+<table class="blueTable" border="1">
+    <tr>
+        <th>No</th>
+        <th>Peminjam</th>
+        <th>Judul Buku</th>
+        <th>Tanggal Pinjam</th>
+        <th>Tanggal Kembali</th>
+        <th>Admin</th>
+        {% if g.admin %}
+        <th>Action</th>
+        {% endif %}
+    </tr>
+{% set count = namespace(value=1) %}
+{% for transaksi in transaksi %}
+    <tr>
+        <td>{{ count.value }}{% set count.value = count.value + 1 %}</td>
+        <td>{{ transaksi['nama'] }}</td>
+        <td>{{ transaksi['judul'] }}</td>
+        <td>{{ transaksi['tgl_pinjam'] }}</td>
+        <td>{{ transaksi['tgl_kembali'] }}</td>
+        <td>{{ transaksi['namaadmin'] }}</td>
+        {% if g.admin %}
+        <td><a class="button-edit" href="/updatetransaksi/{{ transaksi.id }}">Pengembalian</a></td>
+        {% endif %}
+    </tr>
+{% endfor %}
+</table>
+{% endblock %}

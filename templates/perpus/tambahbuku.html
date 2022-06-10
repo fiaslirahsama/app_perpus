@@ -1,0 +1,198 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}DB Buku{% endblock %}</h1>
+  <a class="action button-menu" href="{{ url_for('index') }}">kembali</a>
+{% endblock %}
+
+{% block content %}
+<h3>Tambah Buku</h3>
+  <form method="POST">
+    <table style="border: 2px solid green; padding:10px;">
+      <tr>
+        <td><label for="isbn">Kode ISBN</label></td>
+        <td><h2>:</h2></td>
+        <td><input style="width:100%" name="isbn" id="isbn" required></td>
+      </tr>
+      <tr>
+        <td><label for="judul">Judul</label></td>
+        <td><h2>:</h2></td>
+        <td><input style="width:100%" name="judul" id="judul" required></td>
+      </tr>
+      <tr>
+        <td><label for="genre">Genre</label></td>
+        <td><h2>:</h2></td>
+        <td><input style="width:100%" name="genre" id="genre" required></td>
+      </tr>
+      <tr>
+        <td><label for="sinopsis">Sinopsis</label></td>
+        <td><h2>:</h2></td>
+        <td><input style="width:100%" name="sinopsis" id="sinopsis" required></td>
+      </tr>
+      <tr>
+        <input name="status" id="status" value="ada" type="hidden">
+      </tr>
+      <tr>
+        <td align="center" colspan="3"><button class="button-input" type="submit" name="tambahbuku">Tambah Buku</button></td>
+      </tr>
+    </table>
+  </form>
+  <button class="button-input100" id="btnmodalbuku"><b>Upload</b></button>
+  <div id="modalbuku" class="modalbuku">
+
+    <!-- Modal content -->
+    <div class="modalbuku-content">
+      <span class="closebuku">&times;</span>
+      <h1 align="center">Upload CSV</h1>
+      <form method="POST" action="{{ url_for('perpus.uploadbuku') }}" enctype="multipart/form-data">
+        <p><input style="width:100%; height: 40px; font-size:24px;" type="file" name="filebuku" accept=".csv"></p>
+        <p><button class="button-input100" name="uploaddatabuku" type="submit"><b>UPLOAD</b></button></p>
+      </form>
+      <h2 align="center">Harap UPLOAD sesuai format seperti tabel dibawah</h2>
+      <table  align="center" border="1">
+        <tr>
+          <th>ISBN</th>
+          <th>JUDUL</th>
+          <th>GENRE</th>
+          <th>SINOPSIS</th>
+        </tr>
+        <tr>
+          <td>000001</td>
+          <td>Buku 1</td>
+          <td>Genre Buku 1</td>
+          <td>Ini sinopsis buku 1</td>
+        </tr>
+        <tr>
+          <td>000002</td>
+          <td>Buku 2</td>
+          <td>Genre Buku 2</td>
+          <td>Ini sinopsis buku 2</td>
+        </tr>
+      </table>
+      <h2 align="center">Format CSV Bisa Didownload Dibawah Ini</h2>
+      <form action="{{ url_for('perpus.downloadformatbuku') }}" method="POST" >
+        <input name="ci" id="ci" value="format" type="hidden">
+        <button class="button-input" name="downloadformatbuku" type="submit"><b>Download</b></button>
+      </form>
+    </div>
+  </div>
+<hr>
+  <h3>Kotak Pencarian</h3>
+  <form method="POST">
+    <table style="border: 2px solid blue; padding:20px;">
+      <tr>
+        <td><label for="cariisbn">Cari berdasarkan kode isbn</label></td>
+        <td><h2>:</h2></td>
+        <td colspan ="2"><input style="width:100%" name="cariisbn" id="cariisbn"></td>
+      </tr>
+      <tr>
+        <td><label for="carijudul">Cari berdasarkan judul</label></td>
+        <td><h2>:</h2></td>
+        <td colspan ="2"><input style="width:100%" name="carijudul" id="carijudul"></td>
+      </tr>
+      <tr>
+        <td><label for="carigenre">Cari berdasarkan genre</label></td>
+        <td><h2>:</h2></td>
+        <td colspan="2"><input style="width:100%" name="carigenre" id="carigenre"></td>
+      </tr>
+      <tr>
+        <td><label>Tampilkan Data Buku</label></td>
+        <td></td>
+        <td><input type="checkbox" name="caripinjam" value="dipinjam">Buku yang dipinjam</td>
+        <td><input type="checkbox" name="cariada" value="ada">Buku yang tersedia</td>
+      </tr>
+      <tr>
+        <td align="center" colspan="4"><button class="button-cari" name="caridatabuku" type="submit"><b>Tampilkan Data</b></button></td>
+      </tr>
+    </table>
+  </form>
+  <form action="{{ url_for('perpus.downloadbuku') }}" method="POST" >
+    <input name="ci" id="ci" value="{{ci}}" type="hidden">
+    <input name="cj" id="cj" value="{{cj}}" type="hidden">
+    <input name="cg" id="cg" value="{{cg}}" type="hidden">
+    <input name="cp" id="cp" value="{{cp}}" type="hidden">
+    <input name="ca" id="ca" value="{{ca}}" type="hidden">
+    <button class="button-input" name="downloaddatabuku" type="submit"><b>Download</b></button>
+  </form>
+  <hr>
+  <h3>Data Buku</h3>
+  <table border="1" class="blueTable">
+      <tr>
+          <th>No</th>
+          <th>ISBN</th>
+          <th>Judul Buku</th>
+          <th>Genre</th>
+          <th>Sinopsis</th>
+          <th>Status</th>
+          <th>Action</th>
+      </tr>
+      {% set count = namespace(value=1) %}
+      {% for buku in buku %}
+      {% if buku['status'] == 'ada' %}
+      <tr>
+          <td>{{ count.value }}{% set count.value = count.value + 1 %}</td>
+          <td>{{ buku['isbn'] }}</td>
+          <td>{{ buku['judul'] }}</td>
+          <td>{{ buku['genre'] }}</td>
+          <td>{{ buku['sinopsis'] }}</td>
+          <td>{{ buku['status'] }}</td>
+          <td><a class="button-edit" href="/updatebukuada/{{ buku.id }}">Edit</a></td>
+      </tr>
+      {% else %}
+      <tr>
+        <td>{{ count.value }}{% set count.value = count.value + 1 %}</td>
+        <td>{{ buku['isbn'] }}</td>
+        <td>{{ buku['judul'] }}</td>
+        <td>{{ buku['genre'] }}</td>
+        <td>{{ buku['sinopsis'] }}</td>
+        <td>{{ buku['status'] }}</td>
+        <td><a class="button-edit" href="/updatebukudipinjam/{{ buku.id }}">Edit</a></td>
+    </tr>
+    {% endif %}
+  {% endfor %}
+  </table>
+  {% block script %}
+<script type="text/javascript">
+  window.onload = function(){ 
+
+    var modalbuku = document.getElementById("modalbuku");
+
+    
+    // Get the button that opens the modal
+
+    var btnbuku = document.getElementById("btnmodalbuku");
+
+    
+    // Get the <span> element that closes the modal
+
+    var spanbuku = document.getElementsByClassName("closebuku")[0];
+
+    
+    // When the user clicks the button, open the modal 
+
+    btnbuku.onclick = function() {
+      modalbuku.style.display = "block";
+    }
+
+    
+    // When the user clicks on <span> (x), close the modal
+
+    spanbuku.onclick = function() {
+      modalbuku.style.display = "none";
+    }
+
+    
+    // When the user clicks anywhere outside of the modal, close it
+
+    window.onclick = function(event) {
+      if (event.target == modalbuku) {
+        modalbuku.style.display = "none";
+      }
+    }
+
+    };
+</script>
+{% endblock %}
+{% endblock %}
+
+

@@ -1,0 +1,202 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}DB Member{% endblock %}</h1>
+  <a class="action button-menu" href="{{ url_for('index') }}">Kembali</a>
+{% endblock %}
+
+{% block content %}
+<h3>Tambah Member</h3>
+  <form method="POST">
+    <table style="border: 2px solid green; padding:10px;">
+      <tr>
+        <td><label for="idmember">ID Member</label></td>
+        <td><h2>:</h2></td>
+        <td><input style="width:100%" name="idmember" id="idmember" required></td>
+      </tr>
+      <tr>
+        <td><label for="nik">Nomor KTP</label></td>
+        <td><h2>:</h2></td>
+        <td><input style="width:100%" name="nik" id="nik" required></td>
+      </tr>
+      <tr>
+        <td><label for="nama">Nama</label></td>
+        <td><h2>:</h2></td>
+        <td><input style="width:100%" name="nama" id="nama" required></td>
+      </tr>
+      <tr>
+        <td><label for="jenis_kelamin">Jenis Kelamin</label></td>
+        <td><h2>:</h2></td>
+        <td><select style="width:100%; height: 40px; font-size:24px;" name="jenis_kelamin" id="jenis_kelamin" required>
+            <option value="Laki-Laki">Laki-Laki</option>
+            <option value="Perempuan">Perempuan</option>   
+        </select></td>
+      </tr>
+      <tr>
+        <td><label for="alamat">Alamat</label></td>
+        <td><h2>:</h2></td>
+        <td><input style="width:100%" name="alamat" id="alamat" required></td>
+      </tr>
+      <tr>
+        <td align="center" colspan="3"><button class="button-input" name="tambahmember" type="submit">Tambah Member</button></td>
+      </tr>
+    </table>
+  </form>
+  <button class="button-input100" id="btnmodalmember"><b>Upload</b></button>
+  <div id="modalmember" class="modalmember">
+
+    <!-- Modal content -->
+    <div class="modalmember-content">
+      <span class="closemember">&times;</span>
+      <h1 align="center">Upload CSV</h1>
+      <form method="POST" action="{{ url_for('perpus.uploadmember') }}" enctype="multipart/form-data">
+        <p><input style="width:100%; height: 40px; font-size:24px;" type="file" name="filemember" accept=".csv"></p>
+        <p><button class="button-input100" name="uploaddatamember" type="submit"><b>UPLOAD</b></button></p>
+      </form>
+      <h2 align="center">Harap UPLOAD sesuai format seperti tabel dibawah</h2>
+      <table  align="center" border="1">
+        <tr>
+          <th>ID MEMBER</th>
+          <th>NO TANDA PENGENAL</th>
+          <th>NAMA MEMBER</th>
+          <th>JENIS KELAMIN</th>
+          <th>ALAMAT</th>
+        </tr>
+        <tr>
+          <td>000001</td>
+          <td>000001</td>
+          <td>Budi</td>
+          <td>Laki-Laki</td>
+          <td>Surabaya</td>
+        </tr>
+        <tr>
+          <td>000002</td>
+          <td>000002</td>
+          <td>Ani</td>
+          <td>Perempuan</td>
+          <td>Surabaya</td>
+        </tr>
+      </table>
+      <h2 align="center">Format CSV Bisa Didownload Dibawah Ini</h2>
+      <form align="center" action="{{ url_for('perpus.downloadformatmember') }}" method="POST" >
+        <input name="ci" id="ci" value="format" type="hidden">
+        <button class="button-input" name="downloadformatmember" type="submit"><b>Download</b></button>
+      </form>
+    </div>
+  
+  </div>
+  <hr>
+  <h3>Kotak Pencarian</h3>
+  <form method="POST">
+    <table style="border: 2px solid blue; padding:20px;">
+      <tr>
+        <td><label for="cariidmember">ID Member</label></td>
+        <td><h2>:</h2></td>
+        <td><input style="width:100%" name="cariidmember" id="cariidmember"></td>
+      </tr>
+      <tr>
+        <td><label for="carinik">Nomor KTP</label></td>
+        <td><h2>:</h2></td>
+        <td><input style="width:100%" name="carinik" id="carinik"></td>
+      </tr>
+      <tr>
+        <td><label for="carinama">Nama</label></td>
+        <td><h2>:</h2></td>
+        <td><input style="width:100%" name="carinama" id="carinama"></td>
+      </tr>
+      <tr>
+        <td><label for="carijenis_kelamin">Jenis Kelamin</label></td>
+        <td><h2>:</h2></td>
+        <td><select style="width:100%; height: 40px; font-size:24px;" name="carijenis" id="carijenis">
+            <option value=""></option>
+            <option value="Laki-Laki">Laki-Laki</option>
+            <option value="Perempuan">Perempuan</option>   
+        </select></td>
+      </tr>
+      <tr>
+        <td><label for="carialamat">Alamat</label></td>
+        <td><h2>:</h2></td>
+        <td><input style="width:100%" name="carialamat" id="carialamat"></td>
+      </tr>
+      <tr>
+        <td align="center" colspan="3"><button class="button-cari" name="caridatamember" type="submit">Tampilkan Data</button></td>
+      </tr>
+    </table>
+  </form>
+  <form action="{{ url_for('perpus.downloadmember') }}" method="POST" >
+    <input name="ci" id="ci" value="{{ci}}" type="hidden">
+    <input name="cni" id="cni" value="{{cni}}" type="hidden">
+    <input name="cna" id="cna" value="{{cna}}" type="hidden">
+    <input name="cj" id="cj" value="{{cj}}" type="hidden">
+    <input name="ca" id="ca" value="{{ca}}" type="hidden">
+    <button class="button-input" name="downloaddatamember" type="submit"><b>Download</b></button>
+  </form>
+  <hr>
+  <h3>Data Member</h3>
+  <table border="1" class="blueTable">
+      <tr>
+          <th>No</th>
+          <th>ID Member</th>
+          <th>NIK</th>
+          <th>Nama</th>
+          <th>Jenis Kelamin</th>
+          <th>Alamat</th>
+          <th>Action</th>
+      </tr>
+      {% set count = namespace(value=1) %}
+  {% for member in member %}
+      <tr>
+          <td>{{ count.value }}{% set count.value = count.value + 1 %}</td>
+          <td>{{ member['idmember'] }}</td>
+          <td>{{ member['nik'] }}</td>
+          <td>{{ member['nama'] }}</td>
+          <td>{{ member['jenis_kelamin'] }}</td>
+          <td>{{ member['alamat'] }}</td>
+          <td><a class="button-edit" href="/updatemember/{{ member.id }}">Edit</a></td>
+      </tr>
+  {% endfor %}
+  </table>
+  {% block script %}
+<script type="text/javascript">
+  window.onload = function(){ 
+
+    var modalmember = document.getElementById("modalmember");
+
+    
+    // Get the button that opens the modal
+
+    var btnmember = document.getElementById("btnmodalmember");
+
+    
+    // Get the <span> element that closes the modal
+
+    var spanmember = document.getElementsByClassName("closemember")[0];
+
+    
+    // When the user clicks the button, open the modal 
+
+    btnmember.onclick = function() {
+      modalmember.style.display = "block";
+    }
+
+    
+    // When the user clicks on <span> (x), close the modal
+
+    spanmember.onclick = function() {
+      modalmember.style.display = "none";
+    }
+
+    
+    // When the user clicks anywhere outside of the modal, close it
+
+    window.onclick = function(event) {
+      if (event.target == modalmember) {
+        modalmember.style.display = "none";
+      }
+    }
+
+    };
+</script>
+{% endblock %}
+{% endblock %}
+

@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Input Transaksi{% endblock %}</h1>
+  <a class="action button-menu" href="{{ url_for('index') }}">Kembali</a>
+{% endblock %}
+
+{% block content %}
+  <form method="POST">
+    <table style="border: 2px solid green; padding:10px;">
+      <tr>
+        <td><label for="idmember">ID Member</label></td>
+        <td><h2>:</h2></td>
+        <td><input style="width:100%" name="idmember" id="idmember" required></td>
+      </tr>
+      <tr>
+        <td><label for="isbn">Kode ISBN</label></td>
+        <td><h2>:</h2></td>
+        <td><input style="width:100%" name="isbn" id="isbn" required></td>
+      </tr>
+      <tr>
+        <td><label for="genre">Tanggal Kembali</label></td>
+        <td><h2>:</h2></td>
+        <td><input style="width:100%; height: 40px; font-size:24px;" type="date" id="tgl_kembali" name="tgl_kembali"></td>
+      </tr>
+      <tr>
+        <input name="flag" id="flag" value="on" type="hidden">
+      </tr>
+      <tr>
+        <td align="center" colspan="3"><button class="button-input" type="submit">Tambah Transaksi</button></td>
+      </tr>
+    </table>
+  </form>
+
+{% block script %}
+<script type="text/javascript">
+window.onload = function as(){ 
+
+var modaltransaksi = document.getElementById("modaltransaksi");
+
+// Get the button that opens the modal
+
+var btntransaksi = document.getElementById("btnmodaltransaksi");
+
+// Get the <span> element that closes the modal
+
+var spantransaksi = document.getElementsByClassName("closetransaksi")[0];
+
+// When the user clicks the button, open the modal 
+
+btntransaksi.onclick = function() {
+  modaltransaksi.style.display = "block";
+}
+
+// When the user clicks on <span> (x), close the modal
+
+spantransaksi.onclick = function() {
+  modaltransaksi.style.display = "none";
+}
+
+// When the user clicks anywhere outside of the modal, close it
+
+window.onclick = function(event) {
+  if (event.target == modaltransaksi) {
+    modaltransaksi.style.display = "none";
+  }
+}
+};
+</script>
+{% endblock %}
+{% endblock %}
+<!-- <button width="100%" class="button-input" id="btnmodaltransaksi"><b>Upload</b></button>
+<div id="modaltransaksi" class="modaltransaksi"> -->
+
+  <!-- Modal content -->
+  <!-- <div class="modaltransaksi-content">
+    <span class="closetransaksi">&times;</span>
+    <p>Some text in the Modal..</p>
+  </div>
+
+</div> -->
